@@ -1,0 +1,9 @@
+{
+    "build": { "dockerfile": "../Dockerfile" },
+    "features": {
+        "git": {
+            "enabled": true
+        }
+    },
+    "forwardPorts": [3000]
+}
