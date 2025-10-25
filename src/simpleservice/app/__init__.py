@@ -1,14 +1,13 @@
 from traceback import format_exc as traceback_format_exc
 
-from flask import Flask, request, Response, make_response
+from flask import Flask, Response, make_response, request
 
 from simpleservice.app.handlers import add_routes
-
 
 WHITELIST_ORIGIN = ("http://localhost:3000",)
 
 
-def create_app():
+def create_app() -> Flask:
     app = Flask(__name__)
     app.logger.info("app enabled")
     app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 0
@@ -36,13 +35,12 @@ def create_app():
             "".join(
                 (
                     f"Error handling request '{request.url}':\n",
-                    traceback_format_exc()
+                    traceback_format_exc(),
                 )
             )
         )
         return make_response(
-            {"code": 500, "name": type(e).__name__, "description": str(e)},
-            500
+            {"code": 500, "name": type(e).__name__, "description": str(e)}, 500
         )
 
     @app.route("/ping")

@@ -1,9 +1,13 @@
-from argparse import ArgumentParser, Namespace as ArgsNamespace
+from argparse import ArgumentParser
+from argparse import Namespace as ArgsNamespace
 from enum import Enum
 
+from flask import Flask
 from gunicorn.app.base import BaseApplication
 
 from simpleservice.app import create_app
+
+OptsType = dict[str, str | list[str]]
 
 
 class EnvType(Enum):
@@ -13,17 +17,17 @@ class EnvType(Enum):
 
 
 class GunicornApp(BaseApplication):
-    def __init__(self, app, opts):
+    def __init__(self, app: Flask, opts: OptsType) -> None:
         self._app = app
         self._opts = opts
-        super(GunicornApp, self).__init__()
+        super().__init__()
 
-    def load_config(self):
+    def load_config(self) -> None:
         for k, v in self._opts.items():
             if k in self.cfg.settings and v is not None:
                 self.cfg.set(k.lower(), v)
 
-    def load(self):
+    def load(self) -> Flask:
         return self._app
 
 
@@ -34,7 +38,7 @@ def parse_args() -> ArgsNamespace:
         "--port",
         type=int,
         default=3000,
-        help="Port to listen, default: %(default)s"
+        help="Port to listen, default: %(default)s",
     )
     parser.add_argument(
         "--env",
@@ -50,10 +54,7 @@ def parse_args() -> ArgsNamespace:
         help="Number of workers (should be n_cores * 2 + 1)",
     )
     parser.add_argument(
-        "--timeout",
-        type=int,
-        default=120,
-        help="requests timeout"
+        "--timeout", type=int, default=120, help="requests timeout"
     )
 
     namespace, unknown_args = parser.parse_known_args()
@@ -74,7 +75,7 @@ def main(args: ArgsNamespace) -> None:
 
     app.logger.info("Start application in production mode")
 
-    opts = dict(
+    opts: OptsType = dict(
         bind=["{host}:{port}".format(host="[::]", port=app.args.port)],
         workers=app.args.workers,
         timeout=app.args.timeout,
