@@ -14,3 +14,58 @@ dependencies = [
 [build-system]
 requires = ["uv_build"]
 build-backend = "uv_build"
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+addopts = "-v --cov=src --cov-report=term-missing"
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.mypy]
+strict = true
+ignore_missing_imports = false
+show_error_codes = true
+allow_subclassing_any = true
+python_version = "3.12"
+
+[[tool.mypy.overrides]]
+module = [
+    "gunicorn.*",
+    "gunicorn",
+]
+ignore_missing_imports = true
+
+[tool.ruff]
+line-length = 79
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+ignore = ["E203"]
+
+[tool.black]
+line-length = 79
+target-version = ['py312']
+
+[tool.isort]
+profile = "black"
+line_length = 79
+
+[tool.flake8]
+max-line-length = 79
+max-complexity = 15
+ignore = "E203, W503"
+
+[dependency-groups]
+dev = [
+    "black>=25.9.0",
+    "flake8>=7.3.0",
+    "isort>=7.0.0",
+    "mypy>=1.18.2",
+    "ruff>=0.14.2",
+    "types-flask>=1.1.6",
+]
+test = [
+    "pytest>=8.4.2",
+    "pytest-cov>=7.0.0",
+    "pytest-mock>=3.15.1",
+]

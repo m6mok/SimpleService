@@ -18,6 +18,26 @@ Production-ready минимальный шаблон сервиса на `Flask`
 
 7. Менеджер пакетов (`astral-sh/uv`)
 
+## Проверки и тесты
+
+Для запуска статических проверок
+
+```sh
+make check
+```
+
+Для автоматического исправления некоторых видов ошибок
+
+```sh
+make fix
+```
+
+Для проведения тестов
+
+```sh
+make test
+```
+
 ## Разработка
 
 1. Запустите `devcontainer`
@@ -25,7 +45,7 @@ Production-ready минимальный шаблон сервиса на `Flask`
 2. Запустите команду
 
     ```sh
-    uv run src/simpleservice/main.py --env DEV --port 3000
+    uv run --no-dev src/simpleservice/main.py --env DEV --port 3000
     ```
 
 ## Локальный запуск
@@ -40,5 +60,5 @@ Production-ready минимальный шаблон сервиса на `Flask`
 
     ```sh
     docker run -d -p 8080:8080 --name my-prod-service simpleservice:prod \
-        uv run src/simpleservice/main.py --env PROD --port 8080 --workers 4 --timeout 300
+        uv run --no-dev src/simpleservice/main.py --env PROD --port 8080 --workers 4 --timeout 300
     ```
